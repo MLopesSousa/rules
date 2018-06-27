@@ -1,10 +1,19 @@
 package marcelo.lopes.sousa.lima.entities;
 
 public class Rule {
-	String descripition;
-	String color;
-	String body;
+	private String descripition;
+	private String color;
+	private String body;
 	boolean enabled;
+	private String path;
+	
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
 
 	public boolean isEnabled() {
 		return enabled;

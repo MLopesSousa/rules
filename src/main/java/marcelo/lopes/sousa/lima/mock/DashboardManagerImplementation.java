@@ -1,7 +1,9 @@
 package marcelo.lopes.sousa.lima.mock;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
@@ -12,7 +14,7 @@ import marcelo.lopes.sousa.lima.entities.Rule;
 
 @ApplicationScoped
 public class DashboardManagerImplementation implements DashboardManager {
-	List<Dashboard> dashboards = new ArrayList<Dashboard>();
+	Map<String, Dashboard> dashboards = new HashMap<String, Dashboard>();
 
 	private void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
 		List<Rule> rules = new ArrayList<Rule>();
@@ -34,35 +36,36 @@ public class DashboardManagerImplementation implements DashboardManager {
 		ds2.setDescription("Adalberto");
 		ds2.setRules(rules2);
 
-		this.dashboards.add(ds);
-		this.dashboards.add(ds2);
+		this.dashboards.put(ds.getDescription(), ds);
+		this.dashboards.put(ds2.getDescription(), ds2);
 	}
 
 	public Dashboard getDashboard(String description) {
-		for (Dashboard ds : this.dashboards) {
-			if (ds.getDescription().equals(description)) {
-				return ds;
-			}
+		if (this.dashboards.containsKey(description)) {
+			return this.dashboards.get(description);
+		} else {
+			Dashboard ds = new Dashboard(new Long(this.dashboards.size() + 1), description, new ArrayList<Rule>());
+			this.addDashboard(ds);
+			return ds;
 		}
-		
-		Dashboard ds = new Dashboard(new Long(this.dashboards.size() + 1), description, new ArrayList<Rule>());
-		this.addDashboard(ds);
-		return ds;
+
 	}
 
 	public List<Dashboard> listDashboard() {
-		return this.dashboards;
+		return new ArrayList<Dashboard>(this.dashboards.values());
 	}
 
 	public void addDashboard(Dashboard dashboard) {
-		this.dashboards.add(dashboard);
-	}
-
-	public void removeDashboard(Dashboard dashboard) {
-		this.dashboards.remove(dashboard);
+		this.dashboards.put(dashboard.getDescription(), dashboard);
 	}
 
 	public Dashboard updateDashboard(Dashboard dashboard) {
-		return null;
+		this.dashboards.remove(dashboard.getDescription());
+		this.dashboards.put(dashboard.getDescription(), dashboard);
+		return dashboard;
+	}
+
+	public void deleteDashboard(String description) {
+		this.dashboards.remove(description);
 	}
 }

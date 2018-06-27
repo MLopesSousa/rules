@@ -6,11 +6,11 @@ public class Dashboard {
 	Long id;
 	String description;
 	List<Rule> rules;
-	
+
 	public Dashboard() {
-		
+
 	}
-	
+
 	public Dashboard(Long id, String description, List<Rule> rules) {
 		this.id = id;
 		this.description = description;
@@ -37,5 +37,4 @@ public class Dashboard {
 		this.id = id;
 	}
 
-	
 }
