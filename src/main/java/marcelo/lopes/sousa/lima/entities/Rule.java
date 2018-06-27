@@ -4,11 +4,25 @@ public class Rule {
 	String descripition;
 	String color;
 	String body;
+	boolean enabled;
 
-	public Rule(String description, String color, String body) {
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void enable() {
+		this.enabled = true;
+	}
+	
+	public void disable() {
+		this.enabled = false;
+	}
+
+	public Rule(String description, String color, String body, boolean enabled) {
 		this.descripition = description;
 		this.color = color;
 		this.body = body;
+		this.enabled = enabled;
 	}
 	
 	public String getDescripition() {

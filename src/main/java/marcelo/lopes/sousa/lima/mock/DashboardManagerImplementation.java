@@ -7,6 +7,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
 import javax.enterprise.event.Observes;
 
+import org.json.JSONObject;
+
 import marcelo.lopes.sousa.lima.entities.Dashboard;
 import marcelo.lopes.sousa.lima.entities.Rule;
 
@@ -16,8 +18,8 @@ public class DashboardManagerImplementation implements DashboardManager {
 	
 	private void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
 		List<Rule> rules = new ArrayList<Rule>();
-		rules.add(new Rule("rule01","#808080","{}"));
-		rules.add(new Rule("rule02","#CD5C5C","{}"));
+		rules.add(new Rule("rule01","#808080","{}", true));
+		rules.add(new Rule("rule02","#CD5C5C","{}", true));
 		
 		Dashboard ds = new Dashboard();
 		ds.setId(1L);
@@ -25,8 +27,8 @@ public class DashboardManagerImplementation implements DashboardManager {
 		ds.setRules(rules);
 		
 		List<Rule> rules2 = new ArrayList<Rule>();
-		rules.add(new Rule("rule03","#808080","{}"));
-		rules.add(new Rule("rule04","#CD5C5C","{}"));
+		rules2.add(new Rule("rule03","#808080","{}", true));
+		rules2.add(new Rule("rule04","#CD5C5C","{}", false));
 		
 		Dashboard ds2 = new Dashboard();
 		ds2.setId(2L);
@@ -39,7 +41,12 @@ public class DashboardManagerImplementation implements DashboardManager {
 	
 	public Dashboard getDashboard(String description) {
 		for(Dashboard ds: this.dashboards) {
+			System.out.println(ds.getDescription() + " is equal to: " + description + " ?");
 			if(ds.getDescription().equals(description)) {
+				for(Rule rule: ds.getRules()) {
+					JSONObject jsonObj = new JSONObject(rule.getBody());
+					System.out.println(jsonObj.toString());
+				}
 				return ds;
 			}
 		}
