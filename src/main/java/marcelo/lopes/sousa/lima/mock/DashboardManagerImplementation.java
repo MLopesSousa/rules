@@ -3,20 +3,18 @@ package marcelo.lopes.sousa.lima.mock;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Initialized;
+import javax.enterprise.event.Observes;
 
 import marcelo.lopes.sousa.lima.entities.Dashboard;
 import marcelo.lopes.sousa.lima.entities.Rule;
 
-@Startup
-@Singleton
+@ApplicationScoped
 public class DashboardManagerImplementation implements DashboardManager {
 	List<Dashboard> dashboards = new ArrayList<Dashboard>();
 	
-	@PostConstruct
-	private void onStartup() {
+	private void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
 		List<Rule> rules = new ArrayList<Rule>();
 		rules.add(new Rule("rule01","#808080","{}"));
 		rules.add(new Rule("rule02","#CD5C5C","{}"));
@@ -34,6 +32,9 @@ public class DashboardManagerImplementation implements DashboardManager {
 		ds2.setId(2L);
 		ds2.setDescription("Adalberto");
 		ds2.setRules(rules2);
+		
+		this.dashboards.add(ds);
+		this.dashboards.add(ds2);
 	}
 	
 	public Dashboard getDashboard(String description) {
@@ -43,14 +44,14 @@ public class DashboardManagerImplementation implements DashboardManager {
 			}
 		}
 		
-		return null;
+		return new Dashboard(new Long(this.dashboards.size() + 1), description, new ArrayList<Rule>());
 	}
 	
 	public List<Dashboard> listDashboard() {
 		return this.dashboards;
 	}
 
-	public void setDashboard(Dashboard dashboard) {
+	public void addDashboard(Dashboard dashboard) {
 		this.dashboards.add(dashboard);
 	}
 
